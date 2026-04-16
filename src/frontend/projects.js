@@ -57,7 +57,7 @@ const REPO_OVERRIDES = {
   "Online-Bookstore-Project": {
     tech: ["UML", "Java", "Docker"],
   },
-  "PORTFOlio":{
+  "PORTFOLio":{
     tech: ["HTML", "CSS", "vanilla JS"],
   }
 };
