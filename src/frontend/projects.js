@@ -59,6 +59,9 @@ const REPO_OVERRIDES = {
   },
   "PORTFOLio":{
     tech: ["HTML", "CSS", "vanilla JS"],
+  },
+  "eli5":{
+    tech:["Javascript", "React Vite", "Node Express", "LLM API", "OpenAI API", "CSS", "HTML"]
   }
 };
 
