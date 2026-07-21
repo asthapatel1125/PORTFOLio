@@ -27,6 +27,18 @@ function colorFor(lang) {
   return LANGUAGE_COLORS[lang] || FALLBACK_COLOR;
 }
 
+// Pick readable text color (near-black or white) for a solid fill,
+// so tech-tag pills stay legible regardless of how light/dark the
+// language's canonical color is.
+function textColorFor(hex) {
+  const c = hex.replace("#", "");
+  const r = parseInt(c.substring(0, 2), 16);
+  const g = parseInt(c.substring(2, 4), 16);
+  const b = parseInt(c.substring(4, 6), 16);
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  return luminance > 0.62 ? "#0a0912" : "#ffffff";
+}
+
 async function fetchJSON(url) {
   const res = await fetch(url, { headers: { Accept: "application/vnd.github+json" } });
   if (!res.ok) throw new Error(`${url} -> HTTP ${res.status}`);
@@ -136,7 +148,7 @@ function renderProjects(projects) {
       const imageUrl = `https://api.dicebear.com/9.x/shapes/svg?seed=${encodeURIComponent(name)}&backgroundColor=1a1030,0b0a14,231338&backgroundType=gradientLinear`;
 
       return `
-      <div class="project-card reveal tilt-card">
+      <div class="project-card reveal tilt-card" style="--accent:${dotColor}">
         <div class="project-filebar">
           <span class="file-dot" style="background:${dotColor}"></span>
           <span>${filename}</span>
@@ -149,7 +161,7 @@ function renderProjects(projects) {
           <h3 class="project-title">${title}</h3>
           <p class="project-description">${description}</p>
           <div class="project-tech">
-            ${tech.map((t) => `<span class="tech-tag" style="color:${colorFor(t)};border-color:${colorFor(t)}55;background:${colorFor(t)}12">${t}</span>`).join("")}
+            ${tech.map((t) => `<span class="tech-tag" style="background:${colorFor(t)};color:${textColorFor(colorFor(t))}">${t}</span>`).join("")}
           </div>
           <div class="project-links">
             <a href="${codeUrl}" class="project-link" target="_blank" rel="noopener">Code</a>
