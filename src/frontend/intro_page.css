@@ -491,58 +491,39 @@ body::before {
 /* ── Project Cards ───────────────────────────────────────── */
 .projects-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.25rem;
 }
 
 .project-card {
-    overflow: hidden;
     border-top: 3px solid var(--accent, var(--violet));
+    padding: 1.6rem 1.75rem;
 }
 
-.project-filebar {
+.project-header {
     display: flex;
     align-items: center;
-    gap: 0.55rem;
-    padding: 0.65rem 1rem;
-    background: var(--inset);
-    border-bottom: 1px solid var(--border);
-    font-size: 0.78rem;
-    color: var(--text-dim);
+    gap: 0.6rem;
+    margin-bottom: 0.85rem;
 }
-.project-filebar .file-dot { width: 8px; height: 8px; }
-.star-count { margin-left: auto; color: var(--amber); font-size: 0.75rem; font-weight: 600; }
-
-.project-image {
-    width: 100%;
-    height: 200px;
-    overflow: hidden;
-    background: var(--inset);
-}
-.project-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.4s ease;
-}
-.project-card:hover .project-image img { transform: scale(1.04); }
-
-.project-content { padding: 1.5rem; }
+.project-header .file-dot { width: 8px; height: 8px; }
+.star-count { color: var(--amber); font-size: 0.78rem; font-weight: 600; flex-shrink: 0; }
 
 .project-title {
     font-family: var(--display);
-    font-size: 1.1rem;
+    font-size: 1.08rem;
     font-weight: 600;
     color: var(--text);
-    margin-bottom: 0.65rem;
     text-transform: capitalize;
+    flex: 1;
 }
 
 .project-description {
     font-size: 0.87rem;
     color: var(--text-dim);
     line-height: 1.65;
-    margin-bottom: 1.1rem;
+    margin-bottom: 1.2rem;
+    min-height: 2.6em;
 }
 
 .project-tech {

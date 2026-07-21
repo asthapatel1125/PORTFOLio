@@ -121,16 +121,6 @@ async function loadGitHubData() {
 // ─────────────────────────────────────────────────────────
 //  Render: projects
 // ─────────────────────────────────────────────────────────
-function extFor(lang) {
-  const map = {
-    Python: ".py", JavaScript: ".js", TypeScript: ".ts", Java: ".java",
-    HTML: ".html", CSS: ".css", Shell: ".sh", Go: ".go", Ruby: ".rb",
-    "C++": ".cpp", C: ".c", "C#": ".cs", VHDL: ".vhd", SQL: ".sql",
-    Dockerfile: "", Rust: ".rs", Kotlin: ".kt", PHP: ".php",
-  };
-  return map[lang] !== undefined ? map[lang] : ".md";
-}
-
 function renderProjects(projects) {
   const grid = document.querySelector(".projects-grid");
   if (!grid) return;
@@ -141,32 +131,24 @@ function renderProjects(projects) {
   }
 
   grid.innerHTML = projects
-    .map(({ title, name, description, tech, codeUrl, demoUrl, stars }) => {
+    .map(({ title, description, tech, codeUrl, demoUrl, stars }) => {
       const primary = tech[0] !== "N/A" ? tech[0] : null;
       const dotColor = primary ? colorFor(primary) : "#6b7099";
-      const filename = name + (primary ? extFor(primary) : ".md");
-      const imageUrl = `https://api.dicebear.com/9.x/shapes/svg?seed=${encodeURIComponent(name)}&backgroundColor=1a1030,0b0a14,231338&backgroundType=gradientLinear`;
 
       return `
       <div class="project-card reveal tilt-card" style="--accent:${dotColor}">
-        <div class="project-filebar">
+        <div class="project-header">
           <span class="file-dot" style="background:${dotColor}"></span>
-          <span>${filename}</span>
+          <h3 class="project-title">${title}</h3>
           ${stars ? `<span class="star-count">★ ${stars}</span>` : ""}
         </div>
-        <div class="project-image">
-          <img src="${imageUrl}" alt="${name}" loading="lazy">
+        <p class="project-description">${description}</p>
+        <div class="project-tech">
+          ${tech.map((t) => `<span class="tech-tag" style="background:${colorFor(t)};color:${textColorFor(colorFor(t))}">${t}</span>`).join("")}
         </div>
-        <div class="project-content">
-          <h3 class="project-title">${title}</h3>
-          <p class="project-description">${description}</p>
-          <div class="project-tech">
-            ${tech.map((t) => `<span class="tech-tag" style="background:${colorFor(t)};color:${textColorFor(colorFor(t))}">${t}</span>`).join("")}
-          </div>
-          <div class="project-links">
-            <a href="${codeUrl}" class="project-link" target="_blank" rel="noopener">Code</a>
-            ${demoUrl ? `<a href="${demoUrl}" class="project-link" target="_blank" rel="noopener">Demo</a>` : ""}
-          </div>
+        <div class="project-links">
+          <a href="${codeUrl}" class="project-link" target="_blank" rel="noopener">Code</a>
+          ${demoUrl ? `<a href="${demoUrl}" class="project-link" target="_blank" rel="noopener">Demo</a>` : ""}
         </div>
       </div>`;
     })
