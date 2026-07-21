@@ -6,7 +6,7 @@
 // ─────────────────────────────────────────────────────────
 const GITHUB_USERNAME = "asthapatel1125";
 const EXCLUDED_REPOS = [];
-const CACHE_KEY = "gh_portfolio_cache_v3";
+const CACHE_KEY = "gh_portfolio_cache_v4";
 const CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
 
 // Canonical GitHub/linguist language colors, so tags and
@@ -25,6 +25,18 @@ const FALLBACK_COLOR = "#8b5cf6";
 
 function colorFor(lang) {
   return LANGUAGE_COLORS[lang] || FALLBACK_COLOR;
+}
+
+// Pick readable text color (near-black or white) for a solid fill,
+// so language tiles stay legible regardless of how light/dark the
+// language's canonical color is.
+function textColorFor(hex) {
+  const c = hex.replace("#", "");
+  const r = parseInt(c.substring(0, 2), 16);
+  const g = parseInt(c.substring(2, 4), 16);
+  const b = parseInt(c.substring(4, 6), 16);
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  return luminance > 0.62 ? "#0a0912" : "#ffffff";
 }
 
 // Bold flat "product" colors for project tiles — deterministic per
@@ -130,8 +142,8 @@ function renderProjects(projects) {
 
   grid.innerHTML = projects
     .map(({ title, description, tech, codeUrl, demoUrl, stars }) => {
-      const primary = tech[0] !== "N/A" ? tech[0] : null;
       const tileColor = candyColorFor(title);
+      const langs = tech[0] !== "N/A" ? tech : [];
 
       return `
       <div class="project-card reveal tilt-card">
@@ -140,8 +152,12 @@ function renderProjects(projects) {
         </div>
         <div class="project-body">
           <p class="project-description">${description}</p>
+          ${langs.length ? `
+          <div class="project-skills">
+            ${langs.map((lang) => `<span class="skill-tile" style="background:${colorFor(lang)};color:${textColorFor(colorFor(lang))}">${lang}</span>`).join("")}
+          </div>` : ""}
           <div class="project-meta">
-            <span class="project-lang">${primary || "—"}${stars ? ` · ★ ${stars}` : ""}</span>
+            <span class="project-lang">${stars ? `★ ${stars}` : ""}</span>
             <div class="project-links">
               <a href="${codeUrl}" class="project-link" target="_blank" rel="noopener">Code</a>
               ${demoUrl ? `<a href="${demoUrl}" class="project-link" target="_blank" rel="noopener">Demo</a>` : ""}
