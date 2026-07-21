@@ -177,18 +177,16 @@ body::before {
     position: relative;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
     color: var(--text-dim);
     text-decoration: none;
     font-size: 0.85rem;
     font-weight: 500;
-    padding: 0 1.1rem;
+    letter-spacing: 0.02em;
+    padding: 0 1.2rem;
     height: 100%;
     white-space: nowrap;
-    border-right: 1px solid var(--border);
-    transition: color 0.2s ease, background 0.2s ease;
+    transition: color 0.2s ease;
 }
-.nav-link:first-child { border-left: 1px solid var(--border); }
 .nav-link::after {
     content: '';
     position: absolute;
@@ -470,6 +468,25 @@ body::before {
 }
 .fetch-error { color: var(--pink); }
 
+/* Live contribution graph strip */
+.contribution-block {
+    margin-top: 3rem;
+    padding: 1.75rem 2rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    text-align: center;
+}
+.contribution-label {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    margin-bottom: 1.1rem;
+}
+.contribution-graph {
+    max-width: 100%;
+    height: auto;
+}
+
 /* ── Solid card base (project / exp / contact) ───────────── */
 .project-card,
 .exp-card,
@@ -526,20 +543,22 @@ body::before {
     min-height: 2.6em;
 }
 
-.project-tech {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-    margin-bottom: 1.4rem;
-}
+.project-langbar { margin-bottom: 1.2rem; }
 
-/* Solid-fill tech pills — real color, not a tinted outline */
-.tech-tag {
-    padding: 0.28rem 0.7rem;
-    border-radius: 6px;
+.langbar-track {
+    display: flex;
+    height: 6px;
+    border-radius: 4px;
+    overflow: hidden;
+    background: var(--inset);
+    margin-bottom: 0.55rem;
+}
+.langbar-seg { height: 100%; }
+
+.langbar-legend {
     font-size: 0.74rem;
-    font-weight: 700;
-    border: none;
+    color: var(--text-dim);
+    letter-spacing: 0.01em;
 }
 
 .project-links { display: flex; gap: 1.5rem; }
