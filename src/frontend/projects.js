@@ -52,7 +52,7 @@ const REPO_OVERRIDES = {
     tech: ["SQL", "Oracle Databases", "Shell"],
   },
   "Design-of-a-Simple-General-Purpose-Processor": {
-    tech: ["VHDL"],
+    tech: ["VHDL", "Quartus III"],
   },
   "Online-Bookstore-Project": {
     tech: ["UML", "Java", "Docker"],
@@ -66,22 +66,46 @@ const REPO_OVERRIDES = {
 };
 
 // ─────────────────────────────────────────────
-//  Map repo → project card
+//  Map a repo's primary tech to a file-icon
+//  extension + a deterministic dot color
 // ─────────────────────────────────────────────
+const EXT_MAP = {
+  python: ".py", java: ".java", javascript: ".js", html: ".html",
+  css: ".css", sql: ".sql", vhdl: ".vhd", uml: ".uml", react: ".jsx",
+  "react vite": ".jsx", "node express": ".js", shell: ".sh",
+};
+
+const DOT_PALETTE = ["file-dot-html", "file-dot-js", "file-dot-json", "file-dot-sh"];
+
+function fileExtFor(tech) {
+  if (!tech || !tech.length) return ".md";
+  const key = tech[0].toLowerCase();
+  return EXT_MAP[key] || ".md";
+}
+
+function dotClassFor(name) {
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) hash = (hash * 31 + name.charCodeAt(i)) >>> 0;
+  return DOT_PALETTE[hash % DOT_PALETTE.length];
+}
+
 function repoToProject(repo) {
   const override = REPO_OVERRIDES[repo.name] || {};
 
   // DiceBear generates a unique abstract shape image based on the repo name
-  const imageUrl = `https://api.dicebear.com/9.x/shapes/svg?seed=${encodeURIComponent(repo.name)}&backgroundColor=1a0b2e,0f172a,0d1117&backgroundType=gradientLinear`;
+  const imageUrl = `https://api.dicebear.com/9.x/shapes/svg?seed=${encodeURIComponent(repo.name)}&backgroundColor=1a1b26,13141c,1e2030&backgroundType=gradientLinear`;
+
+  const tech = override.tech || ["N/A"];
 
   return {
     title: repo.name.replace(/[-_]/g, " "),
+    filename: repo.name + fileExtFor(tech),
     description: repo.description || "No description provided.",
     image: {
       src: imageUrl,
       alt: repo.name,
     },
-    tech: override.tech || ["N/A"],
+    tech,
     links: {
       code: repo.html_url,
       demo: repo.homepage || null,
@@ -98,10 +122,14 @@ function renderProjects(projectArray) {
 
   grid.innerHTML = projectArray
     .map(
-      ({ title, description, image, tech, links }) => `
-      <div class="project-card">
+      ({ title, filename, description, image, tech, links }) => `
+      <div class="project-card reveal tilt-card">
+        <div class="project-filebar">
+          <span class="file-dot ${dotClassFor(filename)}"></span>
+          <span>${filename}</span>
+        </div>
         <div class="project-image">
-          <img src="${image.src}" alt="${image.alt}">
+          <img src="${image.src}" alt="${image.alt}" loading="lazy">
         </div>
         <div class="project-content">
           <h3 class="project-title">${title}</h3>
@@ -117,11 +145,13 @@ function renderProjects(projectArray) {
       </div>`
     )
     .join("");
+
+  document.dispatchEvent(new CustomEvent("projects:rendered"));
 }
 
 function renderError(message) {
   const grid = document.querySelector(".projects-grid");
-  if (grid) grid.innerHTML = `<p style="color: #ff6b6b; text-align:center;">${message}</p>`;
+  if (grid) grid.innerHTML = `<p style="color: var(--red); text-align:center; grid-column: 1/-1;">${message}</p>`;
 }
 
 // ─────────────────────────────────────────────
@@ -129,7 +159,7 @@ function renderError(message) {
 // ─────────────────────────────────────────────
 async function init() {
   const grid = document.querySelector(".projects-grid");
-  if (grid) grid.innerHTML = `<p style="text-align:center; opacity:0.5;">Loading projects...</p>`;
+  if (grid) grid.innerHTML = `<p style="color: var(--text-dim); text-align:center; grid-column: 1/-1;">Loading projects...</p>`;
 
   try {
     const res = await fetch(

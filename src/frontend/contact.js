@@ -12,10 +12,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (!form) return;
 
+  const IDLE_LABEL = "./send-message.sh";
+
   form.addEventListener("submit", async function (e) {
     e.preventDefault();
 
-    btn.textContent = "Sending...";
+    btn.textContent = "sending...";
     btn.disabled = true;
     status.style.display = "none";
 
@@ -28,9 +30,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (res.ok) {
         status.style.display = "block";
-        status.style.background = "#0f2a1a";
-        status.style.color = "#28c840";
-        status.style.border = "1px solid #28c840";
+        status.style.background = "rgba(158, 206, 106, 0.1)";
+        status.style.color = "#9ece6a";
+        status.style.border = "1px solid rgba(158, 206, 106, 0.35)";
         status.textContent = "✓ Message sent! I'll get back to you soon.";
         form.reset();
       } else {
@@ -38,12 +40,12 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     } catch (err) {
       status.style.display = "block";
-      status.style.background = "#2a0f0f";
-      status.style.color = "#ff6b6b";
-      status.style.border = "1px solid #ff6b6b";
+      status.style.background = "rgba(247, 118, 142, 0.1)";
+      status.style.color = "#f7768e";
+      status.style.border = "1px solid rgba(247, 118, 142, 0.35)";
       status.textContent = "✗ Something went wrong. Please try again.";
     } finally {
-      btn.textContent = "Send Message";
+      btn.textContent = IDLE_LABEL;
       btn.disabled = false;
     }
   });
