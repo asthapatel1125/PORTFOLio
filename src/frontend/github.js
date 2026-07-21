@@ -27,16 +27,14 @@ function colorFor(lang) {
   return LANGUAGE_COLORS[lang] || FALLBACK_COLOR;
 }
 
-// Pick readable text color (near-black or white) for a solid fill,
-// so tech-tag pills stay legible regardless of how light/dark the
-// language's canonical color is.
-function textColorFor(hex) {
-  const c = hex.replace("#", "");
-  const r = parseInt(c.substring(0, 2), 16);
-  const g = parseInt(c.substring(2, 4), 16);
-  const b = parseInt(c.substring(4, 6), 16);
-  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-  return luminance > 0.62 ? "#0a0912" : "#ffffff";
+// Bold flat "product" colors for project tiles — deterministic per
+// repo name so it's stable across reloads, and always high-contrast
+// enough for white title text (unlike some GitHub language colors).
+const CANDY_COLORS = ["#e6007e", "#ff6a13", "#7cb518", "#0091c2", "#7b2d8e"];
+function candyColorFor(name) {
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) hash = (hash * 31 + name.charCodeAt(i)) >>> 0;
+  return CANDY_COLORS[hash % CANDY_COLORS.length];
 }
 
 async function fetchJSON(url) {
@@ -133,22 +131,22 @@ function renderProjects(projects) {
   grid.innerHTML = projects
     .map(({ title, description, tech, codeUrl, demoUrl, stars }) => {
       const primary = tech[0] !== "N/A" ? tech[0] : null;
-      const dotColor = primary ? colorFor(primary) : "#6b7099";
+      const tileColor = candyColorFor(title);
 
       return `
-      <div class="project-card reveal tilt-card" style="--accent:${dotColor}">
-        <div class="project-header">
-          <span class="file-dot" style="background:${dotColor}"></span>
+      <div class="project-card reveal tilt-card">
+        <div class="project-tile" style="--accent:${tileColor}">
           <h3 class="project-title">${title}</h3>
-          ${stars ? `<span class="star-count">★ ${stars}</span>` : ""}
         </div>
-        <p class="project-description">${description}</p>
-        <div class="project-tech">
-          ${tech.map((t) => `<span class="tech-tag" style="background:${colorFor(t)};color:${textColorFor(colorFor(t))}">${t}</span>`).join("")}
-        </div>
-        <div class="project-links">
-          <a href="${codeUrl}" class="project-link" target="_blank" rel="noopener">Code</a>
-          ${demoUrl ? `<a href="${demoUrl}" class="project-link" target="_blank" rel="noopener">Demo</a>` : ""}
+        <div class="project-body">
+          <p class="project-description">${description}</p>
+          <div class="project-meta">
+            <span class="project-lang">${primary || "—"}${stars ? ` · ★ ${stars}` : ""}</span>
+            <div class="project-links">
+              <a href="${codeUrl}" class="project-link" target="_blank" rel="noopener">Code</a>
+              ${demoUrl ? `<a href="${demoUrl}" class="project-link" target="_blank" rel="noopener">Demo</a>` : ""}
+            </div>
+          </div>
         </div>
       </div>`;
     })

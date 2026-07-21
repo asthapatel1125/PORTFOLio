@@ -182,7 +182,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let animId = null;
     let running = true;
 
-    const COLORS = ["99, 102, 241", "16, 185, 129", "34, 211, 238"];
+    const COLORS = ["230, 0, 126", "255, 106, 19", "0, 145, 194"];
 
     function resize() {
       const parent = canvas.parentElement;
@@ -244,7 +244,7 @@ document.addEventListener("DOMContentLoaded", () => {
             ctx.beginPath();
             ctx.moveTo(a.x, a.y);
             ctx.lineTo(b.x, b.y);
-            ctx.strokeStyle = `rgba(99, 102, 241, ${0.28 * (1 - dist / 130)})`;
+            ctx.strokeStyle = `rgba(230, 0, 126, ${0.2 * (1 - dist / 130)})`;
             ctx.lineWidth = 1;
             ctx.stroke();
           }
