@@ -149,7 +149,7 @@ function renderProjects(projects) {
           <h3 class="project-title">${title}</h3>
           <p class="project-description">${description}</p>
           <div class="project-tech">
-            ${tech.map((t) => `<span class="tech-tag" style="border-color:${colorFor(t)}66;background:${colorFor(t)}14">${t}</span>`).join("")}
+            ${tech.map((t) => `<span class="tech-tag" style="color:${colorFor(t)};border-color:${colorFor(t)}55;background:${colorFor(t)}12">${t}</span>`).join("")}
           </div>
           <div class="project-links">
             <a href="${codeUrl}" class="project-link" target="_blank" rel="noopener">Code</a>

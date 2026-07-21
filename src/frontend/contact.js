@@ -30,9 +30,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (res.ok) {
         status.style.display = "block";
-        status.style.background = "rgba(5, 150, 105, 0.08)";
-        status.style.color = "#059669";
-        status.style.border = "1px solid rgba(5, 150, 105, 0.3)";
+        status.style.background = "rgba(16, 185, 129, 0.12)";
+        status.style.color = "#10b981";
+        status.style.border = "1px solid rgba(16, 185, 129, 0.4)";
         status.textContent = "✓ Message sent! I'll get back to you soon.";
         form.reset();
       } else {
@@ -40,9 +40,9 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     } catch (err) {
       status.style.display = "block";
-      status.style.background = "rgba(219, 39, 119, 0.08)";
-      status.style.color = "#db2777";
-      status.style.border = "1px solid rgba(219, 39, 119, 0.3)";
+      status.style.background = "rgba(244, 63, 94, 0.12)";
+      status.style.color = "#f43f5e";
+      status.style.border = "1px solid rgba(244, 63, 94, 0.4)";
       status.textContent = "✗ Something went wrong. Please try again.";
     } finally {
       btn.textContent = IDLE_LABEL;
