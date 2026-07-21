@@ -8,8 +8,8 @@
     <link rel="stylesheet" href="intro_page.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%2313141c'/%3E%3Ctext x='12' y='16.5' font-family='monospace' font-size='11' font-weight='700' fill='%237aa2f7' text-anchor='middle'%3E%3C/%3E%3C/text%3E%3C/svg%3E">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%2307060c'/%3E%3Ctext x='12' y='16.5' font-family='monospace' font-size='11' font-weight='700' fill='%238b5cf6' text-anchor='middle'%3E%3C/%3E%3C/text%3E%3C/svg%3E">
 </head>
 <body>
     <div class="scroll-progress" id="scroll-progress"></div>
@@ -29,7 +29,13 @@
     </header>
 
     <main class="main" id="top">
+        <div class="aurora-layer" aria-hidden="true">
+            <div class="aurora-blob aurora-blob-1"></div>
+            <div class="aurora-blob aurora-blob-2"></div>
+            <div class="aurora-blob aurora-blob-3"></div>
+        </div>
         <canvas id="particle-canvas" class="particle-canvas" aria-hidden="true"></canvas>
+
         <div class="content">
             <div class="status-pill" id="status-pill">
                 <span class="status-dot"></span>
@@ -40,42 +46,16 @@
                 <span>Toronto, ON</span>
             </div>
 
-            <div class="terminal">
-                <div class="terminal-titlebar">
-                    <span class="tdot tdot-red"></span>
-                    <span class="tdot tdot-yellow"></span>
-                    <span class="tdot tdot-green"></span>
-                    <span class="terminal-title">astha@portfolio: ~</span>
-                </div>
-                <div class="terminal-body" id="terminal-body">
-                    <div class="term-line">
-                        <span class="prompt">$</span><span class="cmd" data-type="whoami"></span>
-                    </div>
-                    <p class="term-output name-out" data-reveal>astha_patel</p>
+            <h1 class="hero-name" id="hero-name">Astha Patel</h1>
+            <h2 class="hero-role"><span id="hero-role-text"></span><span class="role-cursor"></span></h2>
 
-                    <div class="term-line">
-                        <span class="prompt">$</span><span class="cmd" data-type="cat role.txt"></span>
-                    </div>
-                    <p class="term-output role-out" data-reveal>Computer Engineering — Software Opt. (B.Eng.)</p>
-
-                    <div class="term-line">
-                        <span class="prompt">$</span><span class="cmd" data-type="cat about.txt"></span>
-                    </div>
-                    <p class="term-output" data-reveal>Software engineering graduate building scalable full-stack apps with Python, Java, React, and Node.js. Comfortable designing APIs and cloud-native microservices with FastAPI, Docker, and Kubernetes — and shipping LLM-powered features that simplify real workflows.</p>
-
-                    <div class="term-line">
-                        <span class="prompt">$</span><span class="cmd" data-type="./status --check"></span>
-                    </div>
-                    <p class="term-output status-out" data-reveal>✓ open to entry-level software opportunities</p>
-
-                    <div class="term-line">
-                        <span class="prompt">$</span><span class="cursor"></span>
-                    </div>
-                </div>
-            </div>
+            <p class="description">
+                Computer Engineering (Software Opt.) graduate building scalable full-stack apps with Python, Java, React, and Node.js — designing cloud-native APIs and shipping LLM-powered features that simplify real workflows.
+            </p>
 
             <div class="buttons">
                 <button class="btn btn-primary" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Get In Touch</button>
+                <a href="https://github.com/asthapatel1125" class="btn btn-secondary" target="_blank" rel="noopener">View GitHub</a>
             </div>
 
             <div class="social-icons">
@@ -95,6 +75,9 @@
                     </svg>
                 </a>
             </div>
+
+            <!-- Live GitHub stats — fetched + computed by github.js, never hand-edited -->
+            <div class="stats-grid" id="stats-grid"></div>
         </div>
     </main>
 
@@ -103,8 +86,9 @@
             <div class="projects-header reveal">
                 <p class="section-comment">pulled live from github.com/asthapatel1125</p>
                 <h2 class="projects-title">projects.js</h2>
-                <p class="projects-subtitle">Featured work and labs</p>
+                <p class="projects-subtitle">Featured work and labs — tech tags are the actual language breakdown of each repo</p>
             </div>
+            <!-- Populated automatically by github.js from the GitHub API -->
             <div class="projects-grid"></div>
         </div>
     </section>
@@ -112,134 +96,13 @@
     <section id="skills" class="skills-section">
         <div class="skills-container">
             <div class="skills-header reveal">
-                <p class="section-comment">technologies I work with</p>
+                <p class="section-comment">computed live from every public repo's language bytes</p>
                 <h2 class="skills-title">skills.json</h2>
+                <p class="skills-subtitle">Not a hand-picked list — this is the real breakdown of code I've shipped</p>
             </div>
 
-            <div class="skills-grid">
-                <div class="skill-card reveal tilt-card">
-                    <div class="skill-key">
-                        <div class="skill-icon skill-icon-frontend">
-                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                        </div>
-                        <span class="quote">"</span><span class="key-name">frontend</span><span class="quote">"</span><span class="colon">:</span><span class="bracket">[</span>
-                    </div>
-                    <ul class="skill-list">
-                        <li>HTML</li>
-                        <li>CSS</li>
-                        <li>React</li>
-                        <li>Node Express</li>
-                        <li>JavaScript</li>
-                        <li>Spring Boot</li>
-                    </ul>
-                    <div class="skill-close-bracket">]</div>
-                </div>
-
-                <div class="skill-card reveal tilt-card">
-                    <div class="skill-key">
-                        <div class="skill-icon skill-icon-backend">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.75l6 6 9-13.5"/></svg>
-                        </div>
-                        <span class="quote">"</span><span class="key-name">backend</span><span class="quote">"</span><span class="colon">:</span><span class="bracket">[</span>
-                    </div>
-                    <ul class="skill-list">
-                        <li>Java</li>
-                        <li>Python</li>
-                        <li>FastAPI</li>
-                        <li>REST API</li>
-                        <li>Firebase</li>
-                        <li>gRPC</li>
-                        <li>RabbitMQ</li>
-                        <li>Kafka</li>
-                    </ul>
-                    <div class="skill-close-bracket">]</div>
-                </div>
-
-                <div class="skill-card reveal tilt-card">
-                    <div class="skill-key">
-                        <div class="skill-icon skill-icon-database">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.75l6 6 9-13.5"/></svg>
-                        </div>
-                        <span class="quote">"</span><span class="key-name">database</span><span class="quote">"</span><span class="colon">:</span><span class="bracket">[</span>
-                    </div>
-                    <ul class="skill-list">
-                        <li>OracleDB</li>
-                        <li>MongoDB</li>
-                        <li>SQL</li>
-                        <li>MySQL</li>
-                        <li>NoSQL</li>
-                        <li>Firebase</li>
-                    </ul>
-                    <div class="skill-close-bracket">]</div>
-                </div>
-
-                <div class="skill-card reveal tilt-card">
-                    <div class="skill-key">
-                        <div class="skill-icon skill-icon-deployment">
-                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 2H7c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H7V6h10v10z"/></svg>
-                        </div>
-                        <span class="quote">"</span><span class="key-name">deployment</span><span class="quote">"</span><span class="colon">:</span><span class="bracket">[</span>
-                    </div>
-                    <ul class="skill-list">
-                        <li>Docker</li>
-                        <li>Kubernetes</li>
-                        <li>Google Cloud Platform</li>
-                        <li>Microsoft Azure</li>
-                        <li>Ingress</li>
-                    </ul>
-                    <div class="skill-close-bracket">]</div>
-                </div>
-
-                <div class="skill-card reveal tilt-card">
-                    <div class="skill-key">
-                        <div class="skill-icon skill-icon-testing">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.75l6 6 9-13.5"/></svg>
-                        </div>
-                        <span class="quote">"</span><span class="key-name">testing_qa</span><span class="quote">"</span><span class="colon">:</span><span class="bracket">[</span>
-                    </div>
-                    <ul class="skill-list">
-                        <li>JUnit</li>
-                        <li>Selenium</li>
-                        <li>Cucumber</li>
-                        <li>GitLab</li>
-                    </ul>
-                    <div class="skill-close-bracket">]</div>
-                </div>
-
-                <div class="skill-card reveal tilt-card">
-                    <div class="skill-key">
-                        <div class="skill-icon skill-icon-design">
-                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-                        </div>
-                        <span class="quote">"</span><span class="key-name">design</span><span class="quote">"</span><span class="colon">:</span><span class="bracket">[</span>
-                    </div>
-                    <ul class="skill-list">
-                        <li>Figma</li>
-                        <li>Microservice Architecture</li>
-                    </ul>
-                    <div class="skill-close-bracket">]</div>
-                </div>
-
-                <div class="skill-card reveal tilt-card">
-                    <div class="skill-key">
-                        <div class="skill-icon skill-icon-ai">
-                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                        </div>
-                        <span class="quote">"</span><span class="key-name">ai_tools</span><span class="quote">"</span><span class="colon">:</span><span class="bracket">[</span>
-                    </div>
-                    <ul class="skill-list">
-                        <li>OpenAI LLM</li>
-                        <li>OpenCV</li>
-                        <li>Keras</li>
-                        <li>Scikit-learn</li>
-                        <li>Claude</li>
-                        <li>GitHub Copilot</li>
-                        <li>Cursor</li>
-                        <li>Perplexity</li>
-                    </ul>
-                    <div class="skill-close-bracket">]</div>
-                </div>
-            </div>
+            <!-- Populated automatically by github.js -->
+            <div class="skills-bars"></div>
         </div>
     </section>
 
@@ -332,13 +195,13 @@
             </div>
 
             <div class="footer-bottom">
-                <p class="footer-copyright">Designed &amp; Built by Astha Patel © 2026</p>
+                <p class="footer-copyright">Designed &amp; Built by Astha Patel © 2026 — projects, skills & stats update automatically from GitHub</p>
             </div>
         </div>
     </footer>
 
-    <script src="terminal.js"></script>
-    <script src="projects.js"></script>
+    <script src="hero.js"></script>
+    <script src="github.js"></script>
     <script src="contact.js"></script>
     <script src="effects.js"></script>
 </body>

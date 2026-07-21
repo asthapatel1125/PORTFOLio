@@ -94,15 +94,26 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* ── Scroll-reveal via IntersectionObserver ─────────── */
-  const revealTargets = new Set(document.querySelectorAll(".reveal"));
   const revealObserver = new IntersectionObserver(
     (entries) => {
-      entries.forEach((entry, i) => {
+      entries.forEach((entry) => {
         if (entry.isIntersecting) {
           const el = entry.target;
           const siblingIndex = Array.from(el.parentElement.children).indexOf(el);
-          el.style.transitionDelay = reduceMotion ? "0ms" : Math.min(siblingIndex * 70, 350) + "ms";
+          if (!el.style.transitionDelay) {
+            el.style.transitionDelay = reduceMotion ? "0ms" : Math.min(siblingIndex * 70, 350) + "ms";
+          }
           el.classList.add("in-view");
+
+          // If this is a skill bar row, animate its fill width now that it's visible
+          const fill = el.querySelector && el.querySelector(".skill-bar-fill");
+          if (fill) {
+            const target = fill.dataset.target;
+            requestAnimationFrame(() => {
+              setTimeout(() => { fill.style.width = target + "%"; }, 150);
+            });
+          }
+
           revealObserver.unobserve(el);
         }
       });
@@ -111,17 +122,24 @@ document.addEventListener("DOMContentLoaded", () => {
   );
 
   function observeReveal(el) {
+    if (el.dataset.revealBound) return;
+    el.dataset.revealBound = "true";
     if (reduceMotion) {
       el.classList.add("in-view");
+      const fill = el.querySelector && el.querySelector(".skill-bar-fill");
+      if (fill) fill.style.width = fill.dataset.target + "%";
       return;
     }
     revealObserver.observe(el);
   }
-  revealTargets.forEach(observeReveal);
 
-  // Watch the projects grid for cards injected later by projects.js
-  document.addEventListener("projects:rendered", () => {
-    document.querySelectorAll(".project-card.reveal:not(.in-view)").forEach(observeReveal);
+  document.querySelectorAll(".reveal").forEach(observeReveal);
+
+  // Watch for content injected later by github.js
+  ["projects:rendered", "skills:rendered", "stats:rendered"].forEach((evt) => {
+    document.addEventListener(evt, () => {
+      document.querySelectorAll(".reveal:not(.in-view)").forEach(observeReveal);
+    });
   });
 
   /* ── 3D tilt + spotlight on cards ────────────────────── */
@@ -154,6 +172,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   bindAllTiltCards();
   document.addEventListener("projects:rendered", bindAllTiltCards);
+  document.addEventListener("stats:rendered", bindAllTiltCards);
 
   /* ── Particle network canvas in hero ────────────────── */
   const canvas = document.getElementById("particle-canvas");
@@ -164,7 +183,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let animId = null;
     let running = true;
 
-    const COLORS = ["122, 162, 247", "187, 154, 247", "125, 207, 255"];
+    const COLORS = ["139, 92, 246", "236, 72, 153", "34, 211, 238"];
 
     function resize() {
       const parent = canvas.parentElement;
@@ -226,7 +245,7 @@ document.addEventListener("DOMContentLoaded", () => {
             ctx.beginPath();
             ctx.moveTo(a.x, a.y);
             ctx.lineTo(b.x, b.y);
-            ctx.strokeStyle = `rgba(122, 162, 247, ${0.16 * (1 - dist / 130)})`;
+            ctx.strokeStyle = `rgba(139, 92, 246, ${0.16 * (1 - dist / 130)})`;
             ctx.lineWidth = 1;
             ctx.stroke();
           }
