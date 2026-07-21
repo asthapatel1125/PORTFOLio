@@ -6,7 +6,7 @@
 // ─────────────────────────────────────────────────────────
 const GITHUB_USERNAME = "asthapatel1125";
 const EXCLUDED_REPOS = [];
-const CACHE_KEY = "gh_portfolio_cache_v2";
+const CACHE_KEY = "gh_portfolio_cache_v3";
 const CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
 
 // Canonical GitHub/linguist language colors, so tags and
@@ -54,10 +54,7 @@ async function loadGitHubData() {
   const cached = readCache();
   if (cached) return cached;
 
-  const [profile, repos] = await Promise.all([
-    fetchJSON(`https://api.github.com/users/${GITHUB_USERNAME}`),
-    fetchJSON(`https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=100`),
-  ]);
+  const repos = await fetchJSON(`https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=100`);
 
   const active = repos
     .filter((r) => !r.fork)
@@ -100,18 +97,9 @@ async function loadGitHubData() {
     };
   });
 
-  const totalStars = active.reduce((sum, r) => sum + (r.stargazers_count || 0), 0);
-
   const data = {
-    profile: {
-      publicRepos: profile.public_repos,
-      followers: profile.followers,
-      createdAt: profile.created_at,
-      avatarUrl: profile.avatar_url,
-    },
     projects,
     languageTotals,
-    totalStars,
   };
 
   writeCache(data);
@@ -161,7 +149,7 @@ function renderProjects(projects) {
           <h3 class="project-title">${title}</h3>
           <p class="project-description">${description}</p>
           <div class="project-tech">
-            ${tech.map((t) => `<span class="tech-tag" style="color:${colorFor(t)};border-color:${colorFor(t)}44">${t}</span>`).join("")}
+            ${tech.map((t) => `<span class="tech-tag" style="border-color:${colorFor(t)}66;background:${colorFor(t)}14">${t}</span>`).join("")}
           </div>
           <div class="project-links">
             <a href="${codeUrl}" class="project-link" target="_blank" rel="noopener">Code</a>
@@ -224,42 +212,6 @@ function renderSkillsError(message) {
 }
 
 // ─────────────────────────────────────────────────────────
-//  Render: live stat cards
-// ─────────────────────────────────────────────────────────
-function renderStats({ profile, totalStars, languageTotals }) {
-  const grid = document.querySelector(".stats-grid");
-  if (!grid) return;
-
-  const topLang = Object.entries(languageTotals).sort((a, b) => b[1] - a[1])[0];
-  const sinceYear = profile.createdAt ? new Date(profile.createdAt).getFullYear() : "—";
-
-  const stats = [
-    { label: "public repos", value: profile.publicRepos ?? "—", color: "#8b5cf6" },
-    { label: "total stars", value: totalStars ?? 0, color: "#fbbf24" },
-    { label: "followers", value: profile.followers ?? "—", color: "#22d3ee" },
-    { label: "top language", value: topLang ? topLang[0] : "—", color: topLang ? colorFor(topLang[0]) : "#34d399" },
-    { label: "on github since", value: sinceYear, color: "#ec4899" },
-  ];
-
-  grid.innerHTML = stats
-    .map(
-      (s) => `
-      <div class="stat-card reveal tilt-card" style="--accent:${s.color}">
-        <div class="stat-value">${s.value}</div>
-        <div class="stat-label">${s.label}</div>
-      </div>`
-    )
-    .join("");
-
-  document.dispatchEvent(new CustomEvent("stats:rendered"));
-}
-
-function renderStatsError() {
-  const grid = document.querySelector(".stats-grid");
-  if (grid) grid.innerHTML = "";
-}
-
-// ─────────────────────────────────────────────────────────
 //  Init
 // ─────────────────────────────────────────────────────────
 async function init() {
@@ -270,14 +222,12 @@ async function init() {
 
   try {
     const data = await loadGitHubData();
-    renderStats(data);
     renderProjects(data.projects);
     renderSkills(data.languageTotals);
   } catch (err) {
     console.error(err);
     renderProjectsError("Could not reach the GitHub API right now. Refresh to try again.");
     renderSkillsError("Could not compute language stats right now.");
-    renderStatsError();
   }
 }
 

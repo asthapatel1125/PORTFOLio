@@ -136,7 +136,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll(".reveal").forEach(observeReveal);
 
   // Watch for content injected later by github.js
-  ["projects:rendered", "skills:rendered", "stats:rendered"].forEach((evt) => {
+  ["projects:rendered", "skills:rendered"].forEach((evt) => {
     document.addEventListener(evt, () => {
       document.querySelectorAll(".reveal:not(.in-view)").forEach(observeReveal);
     });
@@ -172,7 +172,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   bindAllTiltCards();
   document.addEventListener("projects:rendered", bindAllTiltCards);
-  document.addEventListener("stats:rendered", bindAllTiltCards);
 
   /* ── Particle network canvas in hero ────────────────── */
   const canvas = document.getElementById("particle-canvas");
@@ -183,7 +182,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let animId = null;
     let running = true;
 
-    const COLORS = ["139, 92, 246", "236, 72, 153", "34, 211, 238"];
+    const COLORS = ["124, 58, 237", "219, 39, 119", "8, 145, 178"];
 
     function resize() {
       const parent = canvas.parentElement;
@@ -245,7 +244,7 @@ document.addEventListener("DOMContentLoaded", () => {
             ctx.beginPath();
             ctx.moveTo(a.x, a.y);
             ctx.lineTo(b.x, b.y);
-            ctx.strokeStyle = `rgba(139, 92, 246, ${0.16 * (1 - dist / 130)})`;
+            ctx.strokeStyle = `rgba(124, 58, 237, ${0.22 * (1 - dist / 130)})`;
             ctx.lineWidth = 1;
             ctx.stroke();
           }
@@ -274,6 +273,29 @@ document.addEventListener("DOMContentLoaded", () => {
     window.addEventListener("resize", resize);
     resize();
     step();
+  }
+
+  /* ── Scrollspy: highlight active nav tab ────────────── */
+  const navLinks = Array.from(document.querySelectorAll(".nav-link[data-section]"));
+  const sections = navLinks
+    .map((link) => document.getElementById(link.dataset.section))
+    .filter(Boolean);
+
+  if (sections.length) {
+    const spyObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const id = entry.target.id;
+            navLinks.forEach((link) => {
+              link.classList.toggle("active", link.dataset.section === id);
+            });
+          }
+        });
+      },
+      { rootMargin: "-45% 0px -50% 0px", threshold: 0 }
+    );
+    sections.forEach((s) => spyObserver.observe(s));
   }
 
   /* ── Easter egg: type "hire" anywhere ───────────────── */
