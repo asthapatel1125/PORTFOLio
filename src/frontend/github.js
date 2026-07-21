@@ -27,6 +27,18 @@ function colorFor(lang) {
   return LANGUAGE_COLORS[lang] || FALLBACK_COLOR;
 }
 
+// Pick readable text color (near-black or white) for a solid fill,
+// so tech-tag pills stay legible regardless of how light/dark the
+// language's canonical color is.
+function textColorFor(hex) {
+  const c = hex.replace("#", "");
+  const r = parseInt(c.substring(0, 2), 16);
+  const g = parseInt(c.substring(2, 4), 16);
+  const b = parseInt(c.substring(4, 6), 16);
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  return luminance > 0.62 ? "#0a0912" : "#ffffff";
+}
+
 async function fetchJSON(url) {
   const res = await fetch(url, { headers: { Accept: "application/vnd.github+json" } });
   if (!res.ok) throw new Error(`${url} -> HTTP ${res.status}`);
@@ -80,14 +92,10 @@ async function loadGitHubData() {
       languageTotals[lang] = (languageTotals[lang] || 0) + bytes;
     });
 
-    const repoTotal = Object.values(langs).reduce((sum, b) => sum + b, 0);
-    const langBreakdown = Object.entries(langs)
+    const topLangs = Object.entries(langs)
       .sort((a, b) => b[1] - a[1])
-      .slice(0, 4)
-      .map(([lang, bytes]) => ({
-        lang,
-        pct: repoTotal ? Math.round((bytes / repoTotal) * 100) : 0,
-      }));
+      .map(([lang]) => lang)
+      .slice(0, 4);
 
     return {
       name: repo.name,
@@ -97,7 +105,7 @@ async function loadGitHubData() {
       updatedAt: repo.pushed_at,
       codeUrl: repo.html_url,
       demoUrl: repo.homepage || null,
-      tech: langBreakdown.length ? langBreakdown : [{ lang: "N/A", pct: 100 }],
+      tech: topLangs.length ? topLangs : ["N/A"],
     };
   });
 
@@ -124,9 +132,8 @@ function renderProjects(projects) {
 
   grid.innerHTML = projects
     .map(({ title, description, tech, codeUrl, demoUrl, stars }) => {
-      const primary = tech[0].lang !== "N/A" ? tech[0].lang : null;
+      const primary = tech[0] !== "N/A" ? tech[0] : null;
       const dotColor = primary ? colorFor(primary) : "#6b7099";
-      const legend = tech.map((t) => `${t.lang} ${t.pct}%`).join("  ·  ");
 
       return `
       <div class="project-card reveal tilt-card" style="--accent:${dotColor}">
@@ -136,11 +143,8 @@ function renderProjects(projects) {
           ${stars ? `<span class="star-count">★ ${stars}</span>` : ""}
         </div>
         <p class="project-description">${description}</p>
-        <div class="project-langbar">
-          <div class="langbar-track">
-            ${tech.map((t) => `<span class="langbar-seg" style="width:${t.pct}%;background:${colorFor(t.lang)}"></span>`).join("")}
-          </div>
-          <div class="langbar-legend">${legend}</div>
+        <div class="project-tech">
+          ${tech.map((t) => `<span class="tech-tag" style="background:${colorFor(t)};color:${textColorFor(colorFor(t))}">${t}</span>`).join("")}
         </div>
         <div class="project-links">
           <a href="${codeUrl}" class="project-link" target="_blank" rel="noopener">Code</a>

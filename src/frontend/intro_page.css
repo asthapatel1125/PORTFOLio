@@ -16,20 +16,18 @@
     --text: #f5f3ff;
     --text-dim: #8b84a8;
 
-    --violet: #a855f7;
+    --violet: #6366f1;
     --pink: #f43f5e;
     --cyan: #22d3ee;
     --emerald: #10b981;
     --amber: #f59e0b;
 
     /* Deeper, fully-opaque fills for solid color-block tiles — chosen so white text sits at solid contrast */
-    --violet-fill: #6d28d9;
-    --pink-fill: #be123c;
+    --violet-fill: #4338ca;
     --cyan-fill: #0e7490;
     --emerald-fill: #047857;
-    --amber-fill: #b45309;
 
-    --gradient: linear-gradient(90deg, var(--violet), var(--pink), var(--cyan));
+    --gradient: linear-gradient(90deg, var(--emerald), var(--cyan), var(--violet));
 
     --mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
     --display: 'Space Grotesk', 'JetBrains Mono', sans-serif;
@@ -95,7 +93,7 @@ body::before {
     width: 440px;
     height: 440px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(168, 85, 247, 0.20) 0%, rgba(244, 63, 94, 0.10) 45%, transparent 70%);
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.20) 0%, rgba(34, 211, 238, 0.10) 45%, transparent 70%);
     pointer-events: none;
     z-index: 1;
     opacity: 0;
@@ -227,8 +225,8 @@ body::before {
     z-index: 1;
     overflow: hidden;
     background:
-        radial-gradient(ellipse 900px 600px at 15% 10%, rgba(168, 85, 247, 0.16), transparent 60%),
-        radial-gradient(ellipse 800px 600px at 88% 15%, rgba(244, 63, 94, 0.13), transparent 60%),
+        radial-gradient(ellipse 900px 600px at 15% 10%, rgba(99, 102, 241, 0.16), transparent 60%),
+        radial-gradient(ellipse 800px 600px at 88% 15%, rgba(16, 185, 129, 0.13), transparent 60%),
         radial-gradient(ellipse 900px 700px at 25% 95%, rgba(34, 211, 238, 0.11), transparent 60%);
 }
 
@@ -289,7 +287,7 @@ body::before {
     line-height: 0.94;
     letter-spacing: -0.03em;
     margin-bottom: 1.25rem;
-    background: linear-gradient(90deg, var(--violet), var(--pink), var(--cyan), var(--violet));
+    background: linear-gradient(90deg, var(--emerald), var(--cyan), var(--violet), var(--emerald));
     background-size: 300% 100%;
     -webkit-background-clip: text;
     background-clip: text;
@@ -363,7 +361,7 @@ body::before {
 .btn-primary:hover {
     background-position: 100% 0;
     transform: translateY(-2px);
-    box-shadow: 0 12px 30px rgba(168, 85, 247, 0.35);
+    box-shadow: 0 12px 30px rgba(99, 102, 241, 0.35);
 }
 
 .btn-secondary {
@@ -817,7 +815,7 @@ body::before {
 .form-textarea:focus {
     outline: none;
     border-color: var(--violet);
-    box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.2);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
 }
 .form-input::placeholder,
 .form-textarea::placeholder { color: var(--text-dim); opacity: 0.7; }
@@ -836,15 +834,15 @@ body::before {
     cursor: pointer;
     transition: all 0.2s ease;
 }
-.form-submit:hover { background-position: 100% 0; transform: translateY(-2px); box-shadow: 0 12px 30px rgba(168, 85, 247, 0.32); }
+.form-submit:hover { background-position: 100% 0; transform: translateY(-2px); box-shadow: 0 12px 30px rgba(99, 102, 241, 0.32); }
 .form-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 .form-submit:active:not(:disabled) { transform: translateY(0); }
 
 /* ── Easter-egg pulse ─────────────────────────────────────── */
 .pulse-once { animation: pulse-once-kf 0.9s ease; }
 @keyframes pulse-once-kf {
-    0% { box-shadow: 0 0 0 0 rgba(168, 85, 247, 0.5); }
-    100% { box-shadow: 0 0 0 22px rgba(168, 85, 247, 0); }
+    0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.5); }
+    100% { box-shadow: 0 0 0 22px rgba(99, 102, 241, 0); }
 }
 
 /* ── Footer ──────────────────────────────────────────────── */
